@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#ffff"
     android:layout_height="wrap_content">
 <TextView
     android:id="@+id/zip_code"
@@ -8,4 +9,4 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_horizontal_margin"
     />
-</LinearLayout>
+</RelativeLayout>

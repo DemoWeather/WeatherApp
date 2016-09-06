@@ -6,9 +6,14 @@ package com.example.rk.weatherapp.model;
  */
 
 public class WeatherResponse {
+
+    private CurrentObservation current_observation;
+
+    private WeatherResponse(){
+
+    }
     public CurrentObservation getCurrent_observation() {
         return current_observation;
     }
 
-    private CurrentObservation current_observation;
 }

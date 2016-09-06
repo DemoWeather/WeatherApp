@@ -41,21 +41,11 @@ public class CurrentObservation {
     private String feelslike_c;
     private String visibility_mi;
     private String visibility_km;
-    //            "solarradiation": "0",
-//            "UV": "0",
-//            "precip_1hr_string": "0.00 in ( 0 mm)",
-//            "precip_1hr_in": "0.00",
-//            "precip_1hr_metric": " 0",
     private String precip_today_string;
     private String precip_today_in;
     private String precip_today_metric;
     private String soil_moisture;
     private String icon;
-//            "icon_url": "http://icons.wxug.com/i/c/k/nt_mostlycloudy.gif",
-//            "forecast_url": "http://www.wunderground.com/US/KS/Shawnee_Mission.html",
-//            "history_url": "http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KKSSTANL1",
-//            "ob_url": "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=38.860008,-94.682350",
-//            "nowcast": ""
 
     private CurrentObservation() {
 
@@ -113,15 +103,15 @@ public class CurrentObservation {
         return weather;
     }
 
-    public String getTemperature_string() {
+    public String getTemperatureString() {
         return temperature_string;
     }
 
-    public float getTemp_f() {
+    public float getTempF() {
         return temp_f;
     }
 
-    public float getTemp_c() {
+    public float getTempC() {
         return temp_c;
     }
 
@@ -181,15 +171,15 @@ public class CurrentObservation {
         return dewpoint_c;
     }
 
-    public String getFeelslike_string() {
+    public String getFeelslikeString() {
         return feelslike_string;
     }
 
-    public String getFeelslike_f() {
+    public String getFeelslikeInF() {
         return feelslike_f;
     }
 
-    public String getFeelslike_c() {
+    public String getFeelslikeInC() {
         return feelslike_c;
     }
 

@@ -18,6 +18,7 @@ public class ObservationLocation {
     private ObservationLocation(){
 
     }
+
     public String getFull() {
         return full;
     }

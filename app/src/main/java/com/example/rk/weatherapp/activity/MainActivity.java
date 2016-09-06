@@ -2,13 +2,12 @@ package com.example.rk.weatherapp.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +29,6 @@ import com.example.rk.weatherapp.application.WeatherApplication;
 import com.example.rk.weatherapp.model.CurrentObservation;
 import com.example.rk.weatherapp.model.WeatherResponse;
 import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
 
 import java.util.ArrayList;
 
@@ -68,6 +66,13 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.top = 10;
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,8 +111,7 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
 
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
 
-        dialogBuilder.setTitle("Custom dialog");
-        dialogBuilder.setMessage("Enter text below");
+        dialogBuilder.setTitle("Add Zip Code");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //do something with edt.getText().toString();
@@ -146,8 +150,11 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
 
                     toast.show();
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), AddZipCodeActivity.class);
-                    intent.putExtra("temp", currentObservation.getTemperature_string());
+                    Intent intent = new Intent(getApplicationContext(), WeatherDetailsActivity.class);
+                    intent.putExtra("temp", currentObservation.getTemperatureString());
+                    intent.putExtra("city", currentObservation.getDisplay_location().getFull());
+                    intent.putExtra("feelsLike", currentObservation.getFeelslikeString());
+
                     startActivity(intent);
                 }
             }
