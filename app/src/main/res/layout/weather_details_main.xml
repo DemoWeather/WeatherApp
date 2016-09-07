@@ -11,8 +11,6 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="Hello"
-
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -39,22 +37,40 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.example.rk.weatherapp.activity.MainActivity"
         tools:showIn="@layout/weather_details_main">
-
-        <TextView
-            android:id="@+id/edit1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
         <TextView
             android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:paddingTop="@dimen/activity_vertical_margin"
             />
         <TextView
-            android:id="@+id/feels_like"
+            android:id="@+id/edit1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:paddingTop="@dimen/activity_vertical_margin"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+
+                android:text="@string/feels_like"/>
+            <TextView
+                android:id="@+id/feels_like_value"
+                android:textSize="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

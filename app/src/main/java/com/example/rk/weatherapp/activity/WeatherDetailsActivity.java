@@ -1,10 +1,7 @@
 package com.example.rk.weatherapp.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.rk.weatherapp.R;
@@ -25,14 +22,14 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.weather_details_main);
         temperature = (TextView) findViewById(R.id.edit1);
         city = (TextView) findViewById(R.id.city);
-        feelsLike = (TextView) findViewById(R.id.feels_like);
+        feelsLike = (TextView) findViewById(R.id.feels_like_value);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        temperature.setText("Temperature :"+(String) getIntent().getExtras().get("temp"));
-        city.setText("City :"+(String) getIntent().getExtras().get("city"));
-        feelsLike.setText("Feels like" +(String) getIntent().getExtras().get("feelsLike"));
+        city.setText((String) getIntent().getExtras().get("city"));
+        temperature.setText((String) getIntent().getExtras().get("temp"));
+        feelsLike.setText((String) getIntent().getExtras().get("feelsLike"));
     }
 }

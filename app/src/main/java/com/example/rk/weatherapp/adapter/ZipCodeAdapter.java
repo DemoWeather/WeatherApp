@@ -5,17 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.rk.weatherapp.R;
-import com.example.rk.weatherapp.application.WeatherApplication;
-import com.example.rk.weatherapp.model.WeatherResponse;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +17,23 @@ import java.util.List;
  */
 
 public class ZipCodeAdapter extends RecyclerView.Adapter<ZipCodeAdapter.ZipCodeViewHolder> {
-    public static  final String TAG = ZipCodeAdapter.class.getSimpleName();
-    private ArrayList<String> zipCodes = new ArrayList<>();
+    private static final String TAG = ZipCodeAdapter.class.getSimpleName();
+    private List<String> zipCodes = new ArrayList<>();
     private OnClickViewHolder onClickViewHolder;
 
-    public ZipCodeAdapter(ArrayList<String> zipCodes) {
+    public ZipCodeAdapter(List<String> zipCodes) {
         this.zipCodes = zipCodes;
     }
 
-public interface OnClickViewHolder{
-     void performRequest(String zipCode);
-}
+    public interface OnClickViewHolder {
+        void performRequest(String zipCode);
+
+        void onLongClick(String zipCode);
+    }
+
     @Override
     public ZipCodeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e(TAG,"on create view holder");
+        Log.d(TAG, "on create view holder");
         ZipCodeViewHolder viewHolder;
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final View itemView = inflater.inflate(R.layout.itemview_layout, parent, false);
@@ -48,8 +43,8 @@ public interface OnClickViewHolder{
 
     @Override
     public void onBindViewHolder(ZipCodeViewHolder holder, final int position) {
-        Log.e(TAG,"on bind view holder");
-        Log.e(TAG,zipCodes.get(position));
+        Log.d(TAG, "on bind view holder");
+        Log.e(TAG, zipCodes.get(position));
         final String zipCode = zipCodes.get(position);
         holder.txtViewTitle.setText(zipCode);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -58,17 +53,25 @@ public interface OnClickViewHolder{
                 onClickViewHolder.performRequest(zipCode);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onClickViewHolder.onLongClick(zipCode);
+                return false;
+            }
+        });
     }
-    public  void  setOnClickViewHolder(OnClickViewHolder onClickViewHolder){
+
+    public void setOnClickViewHolder(OnClickViewHolder onClickViewHolder) {
         this.onClickViewHolder = onClickViewHolder;
     }
 
     @Override
     public int getItemCount() {
-       return zipCodes.size();
+        return zipCodes.size();
     }
 
-    public static class ZipCodeViewHolder extends RecyclerView.ViewHolder {
+    static class ZipCodeViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtViewTitle;
 
@@ -77,7 +80,6 @@ public interface OnClickViewHolder{
             txtViewTitle = (TextView) itemLayoutView.findViewById(R.id.zip_code);
         }
     }
-
 
 
 }

@@ -31,10 +31,12 @@ import com.example.rk.weatherapp.model.WeatherResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.OnClickViewHolder {
-    ArrayList<String> zipCodes = new ArrayList<>();
+    public static final String TAG = MainActivity.class.getSimpleName();
+    List<String> zipCodes = new ArrayList<>();
     RecyclerView recyclerView;
     FloatingActionButton fab;
     ZipCodeAdapter zipCodeAdapter;
@@ -43,11 +45,6 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final Gson gson = new Gson();
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         zipCodes.add("66223");
         zipCodes.add("21043");
         zipCodes.add("78575");
@@ -57,14 +54,15 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
     @Override
     protected void onResume() {
         super.onResume();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         zipCodeAdapter = new ZipCodeAdapter(zipCodes);
         zipCodeAdapter.setOnClickViewHolder(this);
         recyclerView.setAdapter(zipCodeAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-
         recyclerView.setLayoutManager(linearLayoutManager);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -76,34 +74,15 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChangeLangDialog();
+                addZipCodeDialog();
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void showChangeLangDialog() {
+    /**
+     * Dialog to add zip code to the list
+     */
+    private void addZipCodeDialog() {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.alert_dialog, null);
@@ -114,16 +93,38 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
         dialogBuilder.setTitle("Add Zip Code");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //do something with edt.getText().toString();
                 zipCodes.add(edt.getText().toString());
-                Log.e("ACT", zipCodes.toString());
                 zipCodeAdapter.notifyDataSetChanged();
 
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //pass
+                dialog.dismiss();
+
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    /**
+     * Dialog to delete the selected zipcode
+     * @param zipCode string value of zipcode that needs to be deleted
+     */
+    public void showDeleteDialog(final String zipCode) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Remove Zip Code");
+        dialogBuilder.setMessage("Are you sure you want to remove ?");
+        dialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                zipCodes.remove(zipCode);
+                zipCodeAdapter.notifyDataSetChanged();
+
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
 
             }
@@ -133,14 +134,13 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
     }
 
     @Override
-    public void performRequest(String zipCode) {
+    public void performRequest(final String zipCode) {
         final Gson gson = new Gson();
         String url = "http://api.wunderground.com/api/f5c35403c02f8eae/conditions/q/" + zipCode + ".json";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e("acivity", "successful");
-                Log.e("activity", response);
+                Log.d("activity", response);
                 WeatherResponse weatherResponse = gson.fromJson(response, WeatherResponse.class);
                 CurrentObservation currentObservation =
                         weatherResponse.getCurrent_observation();
@@ -161,10 +161,15 @@ public class MainActivity extends AppCompatActivity implements ZipCodeAdapter.On
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("act", "failed");
+                Log.e(TAG, "Error in fetching the response");
 
             }
         });
         WeatherApplication.getInstance().getQueue().add(stringRequest);
+    }
+
+    @Override
+    public void onLongClick(String zipCode) {
+        showDeleteDialog(zipCode);
     }
 }
